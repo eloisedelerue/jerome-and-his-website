@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Éloïse Delerue's Website</title>
+    <link
+      rel="icon"
+      href="{{url_for('static', filename='images/favicon.svg')}}"
+      type="image/svg+xml"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/style.css')}}"
+    />
+    <script defer src="{{url_for('static', filename='js/script.js')}}"></script>
+  </head>
+</html>
+
+<body>
+
+          <header>
+          <p>A Comparative Grad-CAM Analysis of YOLOv8 on Artistic Representations of Humans</p>
+    </header>
+
+      <div
+      class="window hidden-start" id="window-try-me"
+      style="top: 170px; right: 200px; width: 400px; height: 300px"
+    >
+      <div class="body">
+        <div class="topbar">
+          <p class="topbar">The Test Zone</p>
+          <button class="maximize-button">
+            <img src="{{url_for('static', filename='images/maximize.png')}}" class="button-icon" />
+          </button>
+        </div>
+        <div class="inside">
+          
+          <div class="minimized-content">
+            <p style="text-align: justify;">
+              The funniest window! Submit an image of your choice and see what happens.
+            </p>
+            <button>Try out by yourself!</button>
+          </div>
+          <div class="maximized-content">
+            <p style="text-align: justify;">
+              You can submit an image of your choice to the pre-trained and fine-tuned versions
+              of YOLOv8n and apply Grad-CAM to it in order to display the heatmap of the areas
+              on which the models have focused. Please note that only occurrences of 'persons'
+              will be studied in both cases.<br/>
+              <div class="triple-container">
+  <div class="side-text left">
+    lower values
+  </div>
+  
+  <div class="center-image">
+    <img src="{{url_for('static', filename='images/colormap.png')}}">
+  </div>
+  
+  <div class="side-text right">
+    higher values
+  </div>
+</div>
+              <input type="file" id="upload" accept="image/*" hidden />
+              <label for="upload" class="custom-file-upload">Upload an image</label>
+              <div id="loading" class="loading-container" style="display: none;">
+                <img src="{{url_for('static', filename='images/time_flies.gif')}}" class="loading-gif"/>
+                <p>Image analysis in process...</p>
+              </div>
+              <div id="results-container" class="image-row" style="display: none;">
+                <div class="image-column">
+        <p>Original</p>
+        <img id="preview" />
+    </div>
+        <div class="image-column">
+        <p>Pre-trained YOLOv8n</p>
+        <img id="result-yolov8n" />
+        <div class="metrics" id="metrics-yolov8n"></div>
+    </div>
+    <div class="image-column">
+        <p>Fine-tuned YOLOv8n</p>
+        <img id="result-jerome" />
+        <div class="metrics" id="metrics-jerome"></div>
+    </div>
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="window hidden-start" id="window-fine-tuning"
+      style="top: 50px; left: 40px; width: 400px; height: 300px"
+    >
+      <div class="body">
+        <div class="topbar">
+          <p class="topbar">Fine-Tuning YOLOv8</p>
+          <button class="maximize-button">
+            <img src="{{url_for('static', filename='images/maximize.png')}}" class="button-icon" />
+          </button>
+        </div>
+        <div class="inside">
+          
+          <div class="minimized-content">
+            <p style="text-align: justify;">
+              Here I explain why, how and with what data I fine-tuned YOLOv8. There also are graphs in the end.
+            </p>
+            <button>Read more</button>
+          </div>
+          <div class="maximized-content">
+            <p style="text-align: justify;">
+              Fine-tuning is a transfer learning technique in which a pre-trained model is further trained on a
+              task-specific dataset. Rather than learning visual features from scratch, the model adapts previously
+              learned representations to a new domain or task, typically requiring fewer training samples and less
+              computational cost.
+              <br/><br/>
+              My goal was to fine-tune YOLOv8, already trained on many classes, including persons, so that it would
+              specialise in recognising people in artworks. To do this, I aggregated two publicly available object
+              detection datasets focused on people depicted in artistic contexts:<br/><br/>
+            </p>
+            <ul>
+              <li>
+                <a href="https://universe.roboflow.com/roboflow-100/people-in-paintings" target="_blank">People in Paintings (Roboflow-100)</a>,
+                an open-source object detection dataset hosted on Roboflow Universe
+                as part of the Roboflow-100 (RF100) benchmark. It is specifically designed for detecting human figures
+                in paintings and other forms of visual art. The dataset contains 909 annotated images.<br/><br/>
+              </li>
+              <li>
+                <a href="https://universe.roboflow.com/peopleartyolo/peopleart-4fnuw" target="_blank">PeopleArt (peopleartyolo/peopleart-4fnuw)</a>
+                , which corresponds to a well-known benchmark in the academic
+                literature for person detection across artistic depiction styles, although the Roboflow Universe interface
+                provides limited metadata. It addresses the cross-depiction problem, where objects must be detected
+                consistently despite large stylistic variations (including cartoons and photographs). The dataset contains
+                1,644 annotated images.<br/><br/>
+              </li>
+            </ul>
+            <p style="text-align: justify;">For compatibility with the YOLOv8 pre-trained model, the People in Paintings dataset configuration file
+              (.yaml) was modified so that the class label was renamed from “Human” to “person”, matching the naming
+              convention used during YOLOv8 pre-training.
+              <br/><br/>
+              Together, these datasets comprise a total of 2,553 images annotated with bounding boxes for a single
+              class (”person”). Training was conducted using YOLOv8n with the following hyperparameters:
+              <br/><br/>
+              The full training process lasted approximately one hour with the Google Colab T4 GPU—an ideal duration
+              for a minimal Persona 5 gaming session.
+              <br/><br/>
+              The following section reports the performance metrics obtained after training.
+            </p>
+          <br/>
+            <div style="display: flex; justify-content: space-between; gap: 10px;"> 
+              <img src="{{url_for('static', filename='images/BoxPR_curve.png')}}" style="width: 48%;">
+              <img src="{{url_for('static', filename='images/BoxP_curve.png')}}" style="width: 48%;">
+            </div>
+            <div style="display: flex; justify-content: space-between; gap: 10px;"> 
+              <img src="{{url_for('static', filename='images/BoxR_curve.png')}}" style="width: 48%;">
+              <img src="{{url_for('static', filename='images/BoxF1_curve.png')}}" style="width: 48%;">
+            </div>
+            <img src="{{url_for('static', filename='images/confusion_matrix_normalized.png')}}" style="width: 75%; display: block; margin: 0 auto;">
+            <p><br/><br/>
+              Please note that the codes will be made available soon.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <div
+      class="window hidden-start" id="window-grada-cam"
+      style="top: 100px; left: 110px; width: 400px; height: 300px"
+    >
+      <div class="body">
+        <div class="topbar">
+          <p class="topbar">Grad-CAM</p>
+          <button class="maximize-button">
+            <img src="{{url_for('static', filename='images/maximize.png')}}" class="button-icon" />
+          </button>
+        </div>
+        <div class="inside">
+          
+          <div class="minimized-content">
+            <p style="text-align: justify;">
+              Grad-CAM is an interpretability technique that highlights the regions of an image that
+              contributed the most to the model's detection decision. Here is explained how I adapted
+              it to my model.
+            </p>
+            <button>Read more</button>
+          </div>
+          <div class="maximized-content">
+            <p style="text-align: justify;">
+              Gradient-weighted Class Activation Mapping (Grad-CAM) is a post-hoc interpretability
+              technique designed to explain the predictions of convolutional neural networks, by
+              highlighting the regions of an input image that contribute most strongly to the model’s
+              prediction for a given class.<br/><br/>
+              YOLOv8 differs from standard classification CNNs in both output structure and feature
+              aggregation, as it produces dense predictions across multiple spatial locations and
+              scales rather than a single class score. Consequently, applying Grad-CAM to YOLOv8
+              requires architectural awareness and careful selection of target layers and outputs.<br/><br/>
+              The YOLOv8 model architecture and implementation were obtained from the official
+              Ultralytics repository:<br/><br/></p>
+              <ul><li>
+              <a href="https://github.com/ultralytics/ultralytics/blob/main/docs/en/models/yolov8.md" target="_blank">
+                Ultralytics YOLOv8 documentation</a>.<br/><br/></li></ul><p>
+              The Grad-CAM implementation was adapted from two key open-source resources:<br/><br/></p>
+              <ul><li>
+              <a href="https://github.com/pooya-mohammadi/yolov5-gradcam" target="_blank">A YOLOv5-specific
+                Grad-CAM implementation by Pooya Mohammadi</a>, which provided a practical foundation for
+                adapting Grad-CAM to single-stage object detectors.<br/><br/></li>
+              <li><a href="https://github.com/jacobgil/pytorch-grad-cam" target="_blank">The "pytorch-grad-cam"
+                library and its official documentation</a>, particularly the guidance on non-classification
+                architectures.<br/><br/></li></ul>
+              <p>These resources were combined and extended to support YOLOv8’s architecture and prediction
+                pipeline.<br/><br/>
+              Now, how does it work exactly?<br/><br/>
+              After standard image preprocessing, the YOLOv8 inference pipeline was modified by customising
+              the Non-Maximum Suppression (NMS) stage in order to preserve gradient flow for interpretability
+              purposes. Forward passes were then performed to compute detection predictions. A custom
+              YOLOv8–Grad-CAM interface acts as an intermediary between the YOLOv8 detector and the "pytorch-grad-cam"
+              framework. This interface enables the extraction of feature maps and gradients associated with a
+              specific target class; in this study, we focus exclusively on the “person” class.<br/><br/>
+              Grad-CAM is computed using the feature maps from the Spatial Pyramid Pooling – Fast (SPPF) layer,
+              which is the final layer of the YOLOv8 backbone. SPPF is an optimized and computationally efficient
+              variant of Spatial Pyramid Pooling designed to handle variable-sized input images. This layer
+              represents a semantic bottleneck in the network: information is maximally compressed while retaining
+              high-level semantic meaning, immediately before the network branches into detection heads for
+              bounding box regression and classification. As a result, the abstract concept of “person” is most
+              strongly encoded at this stage, making it an ideal location for interpretability analysis.<br/><br/>
+              Using the gradients of the person class score with respect to the SPPF feature maps, Grad-CAM
+              computes a weighted combination of these activations. The resulting localization map is upsampled
+              and overlaid onto the original image as a heatmap, where higher intensities correspond to regions
+              that contributed most strongly to the model’s detection decision.<br/><br/>
+              Please note that the codes will be made available soon.
+              </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <div
+      class="window hidden-start" id="window-results"
+      style="top: 150px; left: 180px; width: 400px; height: 300px"
+    >
+      <div class="body">
+        <div class="topbar">
+          <p class="topbar">Results</p>
+          <button class="maximize-button">
+            <img src="{{url_for('static', filename='images/maximize.png')}}" class="button-icon" />
+          </button>
+        </div>
+        <div class="inside">
+          
+          <div class="minimized-content">
+            <p style="text-align: justify;">
+              This section is currently empty.
+              It will be filled in very soon!
+            </p>
+            <img src="{{url_for('static', filename='images/look.png')}}" style="max-width: 30%; height: auto; display: block; margin: 10px auto;">
+            <button>Discover</button>
+          </div>
+          <div class="maximized-content">
+            <p style="text-align: justify;">
+              Coming soon...<br/>
+          <img src="{{url_for('static', filename='images/l.png')}}" style="max-width: 10%; height: auto; display: block; margin: 10px auto;">
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="window hidden-start center-start" id="window-project-pres"
+      style="width: 400px; height: 300px"
+    >
+      <div class="body">
+        <div class="topbar">
+          <p class="topbar">About This Project</p>
+          <button class="maximize-button">
+            <img src="{{url_for('static', filename='images/maximize.png')}}" class="button-icon" />
+          </button>
+        </div>
+        <div class="inside">
+          
+          <div class="minimized-content">
+                      <p style="text-align: justify;">
+    This project aims to explore computer vision possibilities, linking it to art history.
+          <img src="{{url_for('static', filename='images/here.png')}}" style="max-width: 70%; height: auto; display: block; margin: 10px auto;">
+          <button>Read more</button>
+          </div>
+          <div class="maximized-content">
+            <p style="text-align: justify;">
+              This self-directed student project was initially conceived as an opportunity
+              to explore computer vision and to apply it to art history, a domain of strong
+              personal interest. My initial goal was to fine-tune a computer vision model so
+              that it could specialise in recognising a specific iconographic motif in artworks.<br/><br/>
+              I quickly chose YOLOv8n as my base model. The main reasons were its lightweight
+              nature (I did not have access to a powerful machine for heavy computation), its speed
+              without sacrificing too much performance, and the relative simplicity and abundant
+              documentation of its architecture. After a few unsuccessful attempts, it became clear
+              that once the model was up and running, the task was mostly about collecting and
+              preparing data. This was not something I wanted to spend too much time on.<br/><br/>
+              Fortunately, I found open-source, already annotated datasets focused on human figures
+              in artworks. This turned out to be ideal, since the "person" class is already included
+              in YOLO’s pre-training. As a result, I was able to fine-tune my model without redefining
+              the task itself.<br/><br/>
+              After several weeks of work, however, I was left with a feeling of unfinished business,
+              and the sense that I had not actually accomplished that much. More importantly, I felt
+              that I did not really understand what was happening inside the model. I was able to train
+              it, but not to explain it.<br/><br/>
+              This is when I started looking into model interpretability, and in particular into
+              Grad-CAM, which allows the visualisation of heatmaps showing which parts of an image
+              the model focuses on when making predictions. The idea immediately appealed to me.
+              However, my version of the model, YOLOv8, was not yet compatible with Grad-CAM, and
+              no straightforward implementation existed at the time.
+              <a href="https://github.com/eirikmn/ultralytics-yolov8_gradcam?tab=readme-ov-file" target="_blank">
+                Some attempts had been made</a>, but they relied on modifying YOLOv8’s architecture,
+                which I wanted to avoid.<br/><br/>
+              I therefore decided to try to adapt Grad-CAM to YOLOv8 myself. After some trial
+              and error, I believe this adaptation was successful.<br/><br/>
+              Once this was done, I started comparing Grad-CAM visualizations produced by the
+              pre-trained YOLOv8 model and by the fine-tuned version, using the same input images.
+              This comparison quickly revealed recurring patterns and differences in where the two
+              models seemed to focus their attention.<br/><br/>
+              At this point, my work has shifted toward a qualitative comparative analysis of
+              these visualizations, with the aim of better understanding how fine-tuning on artworks 
+              changes the way the model “looks” at images.<br/><br/>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+          <div
+      class="window intro-window"
+      style="top: 50%; left: 50%; width: 600px; height: 180px; transform: translate(-50%, -50%)"
+    >
+      <div class="body">
+        <div class="topbar">
+          <p class="topbar">Welcome!</p>
+          <button class="close-button">
+            <img src="{{url_for('static', filename='images/close.png')}}" class="button-icon" />
+          </button>
+        </div>
+        <div class="inside">
+          
+          <div class="minimized-content">
+            <div class="typewriter">
+            <p style="text-align: center;">
+      Hi there! Feel free to navigate between the windows.
+            </p>
+            </div>
+            <button>Got it!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <footer>
+        <div data-text=". Éloïse Delerue © 2025. All rights reserved. What is written is bound to be rewritten. I plan to add features to modify the fonts for those with sensitive eyes. This web page would constitute a supplementary page of a personal website, which is not yet developed. If you are bored, I recommend reading In Search of Lost Time. All the illustrations have been drawn on the phone">
+    <span>
+      . Éloïse Delerue © 2025. All rights reserved. What is written is bound to be rewritten. I plan to add features to modify the fonts for those with sensitive eyes. This web page would constitute a supplementary page of a personal website, which is not yet developed. If you are bored, I recommend reading <em>In Search of Lost Time</em>. All the illustrations have been drawn on the phone
+    </span>
+      </div>
+    </footer>
+</body>
