@@ -44,3 +44,18 @@ The effectiveness of any Deep Learning model is directly tied to the quality and
 - Format Standardization: Ensuring all augmented images and their corresponding labels (bounding boxes) remain perfectly synchronized and formatted for the YOLOv8 training pipeline.
 
 ## Website
+This directory contains the web application for the project.
+The application is built with Flask and features an interactive desktop-style interface to explore how deep learning models "see" art.
+
+### Technical Implementation
+#### Frontend
+- Architecture: Vanilla JavaScript with a custom window management system (z-index handling, maximization, and "pop-in" sequences).
+- Styling: Custom CSS featuring the "Handjet" font and a dotted grid background for a distinct aesthetic.
+- Responsiveness: Windows are draggable and resizable to provide a flexible user experience.
+#### Backend (Flask)
+- Model Interface: A custom bridge between YOLOv8 and the pytorch-grad-cam library.
+- Processing Pipeline:
+  - Image upload and preprocessing.
+  - Custom NMS (Non-Maximum Suppression) to preserve gradient flow.
+  - Grad-CAM computation on the SPPF (Spatial Pyramid Pooling - Fast) layer of the YOLOv8 backbone.
+  - Overlaying results and returning data via JSON.
