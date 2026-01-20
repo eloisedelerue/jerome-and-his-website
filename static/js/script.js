@@ -54,11 +54,11 @@ function initWindow(win) {
 
         newLeft = Math.max(
           margin,
-          Math.min(newLeft, window.innerWidth - rect.width - margin)
+          Math.min(newLeft, window.innerWidth - rect.width - margin),
         );
         newTop = Math.max(
           margin,
-          Math.min(newTop, window.innerHeight - rect.height - margin)
+          Math.min(newTop, window.innerHeight - rect.height - margin),
         );
 
         win.style.left = newLeft + "px";
@@ -116,7 +116,7 @@ function initWindow(win) {
     if (
       contentButton &&
       ["Try me!", "Read more", "Try out by yourself!", "Discover"].includes(
-        contentButton.innerText.trim()
+        contentButton.innerText.trim(),
       )
     ) {
       contentButton.addEventListener("click", toggleMaximize);
@@ -150,14 +150,17 @@ const resultJerome = document.getElementById("result-jerome");
 const resultYolov8n = document.getElementById("result-yolov8n");
 const metricsJerome = document.getElementById("metrics-jerome");
 const metricsYolov8n = document.getElementById("metrics-yolov8n");
+const sampleThumbs = document.querySelectorAll(".sample-thumb"); // Sélectionne les nouvelles images
 
-uploadInput.addEventListener("change", async (e) => {
-  const file = e.target.files[0];
+// --- FONCTION PRINCIPALE ---
+// Cette fonction fait le travail d'envoi et d'affichage
+async function runAnalysis(file) {
   if (!file) return;
 
   resultsContainer.style.display = "none";
   loading.style.display = "flex";
 
+  // Affiche l'aperçu local
   preview.src = URL.createObjectURL(file);
 
   const formData = new FormData();
@@ -173,15 +176,12 @@ uploadInput.addEventListener("change", async (e) => {
 
     const data = await response.json();
 
+    // Mise à jour de l'interface
     resultJerome.src = data.result_jerome;
-    metricsJerome.innerHTML = `Temps: ${data.time_jerome.toFixed(
-      3
-    )}s<br>Détections: ${data.num_detections_jerome}`;
+    metricsJerome.innerHTML = `Temps: ${data.time_jerome.toFixed(3)}s<br>Détections: ${data.num_detections_jerome}`;
 
     resultYolov8n.src = data.result_yolov8n;
-    metricsYolov8n.innerHTML = `Temps: ${data.time_yolov8n.toFixed(
-      3
-    )}s<br>Détections: ${data.num_detections_yolov8n}`;
+    metricsYolov8n.innerHTML = `Temps: ${data.time_yolov8n.toFixed(3)}s<br>Détections: ${data.num_detections_yolov8n}`;
 
     loading.style.display = "none";
     resultsContainer.style.display = "flex";
@@ -189,4 +189,33 @@ uploadInput.addEventListener("change", async (e) => {
     alert(`Erreur: ${error.message}`);
     loading.style.display = "none";
   }
+}
+
+// --- ÉCOUTEURS D'ÉVÉNEMENTS ---
+
+// 1. Cas classique : L'utilisateur upload un fichier
+uploadInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  runAnalysis(file);
+});
+
+// 2. Cas "Sample" : L'utilisateur clique sur une image exemple
+sampleThumbs.forEach((img) => {
+  img.addEventListener("click", async () => {
+    try {
+      // On récupère l'image depuis le serveur (src) pour en faire un "Blob"
+      const response = await fetch(img.src);
+      const blob = await response.blob();
+
+      // On convertit le Blob en un objet File (comme si c'était un upload)
+      const filename = img.getAttribute("data-name") || "sample.jpg";
+      const file = new File([blob], filename, { type: blob.type });
+
+      // On lance l'analyse
+      runAnalysis(file);
+    } catch (err) {
+      alert("Impossible de charger l'image exemple.");
+      console.error(err);
+    }
+  });
 });
