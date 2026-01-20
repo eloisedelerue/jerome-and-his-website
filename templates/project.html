@@ -24,12 +24,12 @@
     </header>
 
       <div
-      class="window hidden-start" id="window-try-me"
+      class="window hidden-start" id="window-project-pres"
       style="top: 170px; right: 200px; width: 400px; height: 300px"
     >
-      <div class="body">
+            <div class="body">
         <div class="topbar">
-          <p class="topbar">The Test Zone</p>
+          <p class="topbar">About This Project</p>
           <button class="maximize-button">
             <img src="{{url_for('static', filename='images/maximize.png')}}" class="button-icon" />
           </button>
@@ -37,74 +37,79 @@
         <div class="inside">
           
           <div class="minimized-content">
-            <p style="text-align: justify;">
-              The funniest window! Submit an image of your choice and see what happens.
-            </p>
-            <button>Try out by yourself!</button>
+                      <p style="text-align: justify;">
+    This project aims to explore computer vision possibilities, linking it to art history.
+          <button>Read more</button>
           </div>
           <div class="maximized-content">
             <p style="text-align: justify;">
-              You can submit an image of your choice to the pre-trained and fine-tuned versions
-              of YOLOv8n and apply Grad-CAM to it in order to display the heatmap of the areas
-              on which the models have focused. Please note that only occurrences of 'persons'
-              will be studied in both cases.<br/>
-              <div class="triple-container">
-  <div class="side-text left">
-    lower values
-  </div>
-  
-  <div class="center-image">
-    <img src="{{url_for('static', filename='images/colormap.png')}}">
-  </div>
-  
-  <div class="side-text right">
-    higher values
-  </div>
-</div>
-              <input type="file" id="upload" accept="image/*" hidden />
-              <div class="sample-section">
-  <p class="sample-title">Try a sample:</p>
-  <div class="sample-container">
-    <img 
-      src="{{url_for('static', filename='images/sample1.jpg')}}" 
-      class="sample-thumb" 
-      data-name="sample1.jpg"
-    />
-    <img 
-      src="{{url_for('static', filename='images/sample2.jpg')}}" 
-      class="sample-thumb" 
-      data-name="sample2.jpg"
-    />
-    <img 
-      src="{{url_for('static', filename='images/sample3.jpg')}}" 
-      class="sample-thumb" 
-      data-name="sample3.jpg"
-    />
-  </div>
-</div>
-<input type="file" id="upload" accept="image/*" hidden />
-              <label for="upload" class="custom-file-upload">Or upload an image</label>
-              <div id="loading" class="loading-container" style="display: none;">
-                <img src="{{url_for('static', filename='images/time_flies.gif')}}" class="loading-gif"/>
-                <p>Image analysis in process...</p>
-              </div>
-              <div id="results-container" class="image-row" style="display: none;">
-                <div class="image-column">
-        <p>Original</p>
-        <img id="preview" />
-    </div>
-        <div class="image-column">
-        <p>Pre-trained YOLOv8n</p>
-        <img id="result-yolov8n" />
-        <div class="metrics" id="metrics-yolov8n"></div>
-    </div>
-    <div class="image-column">
-        <p>Fine-tuned YOLOv8n</p>
-        <img id="result-jerome" />
-        <div class="metrics" id="metrics-jerome"></div>
-    </div>
-              </div>
+              This self-directed student project was initially conceived as an opportunity
+              to explore computer vision and to apply it to art history, a domain of strong
+              personal interest. My initial goal was to fine-tune a computer vision model so
+              that it could specialise in recognising a specific iconographic motif in artworks.<br/><br/>
+              I quickly chose YOLOv8n as my base model. The main reasons were its lightweight
+              nature (I did not have access to a powerful machine for heavy computation), its speed
+              without sacrificing too much performance, and the relative simplicity and abundant
+              documentation of its architecture. (Like this video.)<br/><br/></p>
+              <div class="video-wrapper" style="display: flex; justify-content: center; margin: 20px 0;">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HQXhDO7COj8?si=LuuaMdQjgSz_lOMC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div><p style="text-align: justify;"><br/><br/>
+  After a few unsuccessful attempts, it became clear
+              that once the model was up and running, the task was mostly about collecting and
+              preparing data. This was not something I wanted to spend too much time on.<br/><br/>
+              Fortunately, I found open-source, already annotated datasets focused on human figures
+              in artworks. This turned out to be ideal, since the "person" class is already included
+              in YOLO’s pre-training. As a result, I was able to fine-tune my model without redefining
+              the task itself.<br/><br/>
+              After several weeks of work, however, I was left with a feeling of unfinished business,
+              and the sense that I had not actually accomplished that much. More importantly, I felt
+              that I did not really understand what was happening inside the model. I was able to train
+              it, but not to explain it.<br/><br/>
+              <img src="{{url_for('static', filename='images/not_much.png')}}" style="max-width: 12%; height: auto; display: block; margin: 10px auto;"><br/><br/>
+              This is when I started looking into model interpretability, and in particular into
+              Grad-CAM, which allows the visualisation of heatmaps showing which parts of an image
+              the model focuses on when making predictions. The idea immediately appealed to me.
+              However, my version of the model, YOLOv8, was not yet compatible with Grad-CAM, and
+              no straightforward implementation existed at the time.
+              <a href="https://github.com/eirikmn/ultralytics-yolov8_gradcam?tab=readme-ov-file" target="_blank">
+                Some attempts had been made</a>, but they relied on modifying YOLOv8’s architecture,
+                which I wanted to avoid.<br/><br/>
+              I therefore decided to try to adapt Grad-CAM to YOLOv8 myself. After some trial
+              and error, I believe this adaptation was successful.<br/><br/>
+              Once this was done, I started comparing Grad-CAM visualizations produced by the
+              pre-trained YOLOv8 model and by the fine-tuned version, using the same input images.
+              This comparison quickly revealed recurring patterns and differences in where the two
+              models seemed to focus their attention.<br/><br/>
+              At this point, my work has shifted toward a qualitative comparative analysis of
+              these visualizations, with the aim of better understanding how fine-tuning on artworks 
+              changes the way the model “looks” at images.<br/><br/>
+              If you are ever interested in my project, you can try contacting me via <a href="mailto:eloise.delerue@psl.eu">my email address</a>. (I cannot guarantee a response but I'll do my best.)
             </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+          <div
+      class="window intro-window"
+      style="top: 50%; left: 50%; width: 600px; height: 180px; transform: translate(-50%, -50%)"
+    >
+      <div class="body">
+        <div class="topbar">
+          <p class="topbar">Welcome!</p>
+          <button class="close-button">
+            <img src="{{url_for('static', filename='images/close.png')}}" class="button-icon" />
+          </button>
+        </div>
+        <div class="inside">
+          
+          <div class="minimized-content">
+            <div class="typewriter">
+            <p style="text-align: center;">
+      Hi there! Feel free to navigate between the windows.
+            </p>
+            </div>
+            <button>Got it!</button>
           </div>
         </div>
       </div>
@@ -291,12 +296,12 @@
     </div>
 
     <div
-      class="window hidden-start center-start" id="window-project-pres"
+      class="window hidden-start center-start" id="window-try-me"
       style="width: 400px; height: 300px"
     >
-      <div class="body">
+<div class="body">
         <div class="topbar">
-          <p class="topbar">About This Project</p>
+          <p class="topbar">The Test Zone</p>
           <button class="maximize-button">
             <img src="{{url_for('static', filename='images/maximize.png')}}" class="button-icon" />
           </button>
@@ -304,80 +309,75 @@
         <div class="inside">
           
           <div class="minimized-content">
-                      <p style="text-align: justify;">
-    This project aims to explore computer vision possibilities, linking it to art history.
-          <img src="{{url_for('static', filename='images/here.png')}}" style="max-width: 70%; height: auto; display: block; margin: 10px auto;">
-          <button>Read more</button>
+            <p style="text-align: justify;">
+              The funniest window! Submit an image of your choice and see what happens.
+              <img src="{{url_for('static', filename='images/here.png')}}" style="max-width: 70%; height: auto; display: block; margin: 10px auto;">
+            </p>
+            <button>Try out by yourself!</button>
           </div>
           <div class="maximized-content">
             <p style="text-align: justify;">
-              This self-directed student project was initially conceived as an opportunity
-              to explore computer vision and to apply it to art history, a domain of strong
-              personal interest. My initial goal was to fine-tune a computer vision model so
-              that it could specialise in recognising a specific iconographic motif in artworks.<br/><br/>
-              I quickly chose YOLOv8n as my base model. The main reasons were its lightweight
-              nature (I did not have access to a powerful machine for heavy computation), its speed
-              without sacrificing too much performance, and the relative simplicity and abundant
-              documentation of its architecture. (Like this video.)<br/><br/></p>
-              <div class="video-wrapper" style="display: flex; justify-content: center; margin: 20px 0;">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/HQXhDO7COj8?si=LuuaMdQjgSz_lOMC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div><p style="text-align: justify;"><br/><br/>
-  After a few unsuccessful attempts, it became clear
-              that once the model was up and running, the task was mostly about collecting and
-              preparing data. This was not something I wanted to spend too much time on.<br/><br/>
-              Fortunately, I found open-source, already annotated datasets focused on human figures
-              in artworks. This turned out to be ideal, since the "person" class is already included
-              in YOLO’s pre-training. As a result, I was able to fine-tune my model without redefining
-              the task itself.<br/><br/>
-              After several weeks of work, however, I was left with a feeling of unfinished business,
-              and the sense that I had not actually accomplished that much. More importantly, I felt
-              that I did not really understand what was happening inside the model. I was able to train
-              it, but not to explain it.<br/><br/>
-              <img src="{{url_for('static', filename='images/not_much.png')}}" style="max-width: 12%; height: auto; display: block; margin: 10px auto;"><br/><br/>
-              This is when I started looking into model interpretability, and in particular into
-              Grad-CAM, which allows the visualisation of heatmaps showing which parts of an image
-              the model focuses on when making predictions. The idea immediately appealed to me.
-              However, my version of the model, YOLOv8, was not yet compatible with Grad-CAM, and
-              no straightforward implementation existed at the time.
-              <a href="https://github.com/eirikmn/ultralytics-yolov8_gradcam?tab=readme-ov-file" target="_blank">
-                Some attempts had been made</a>, but they relied on modifying YOLOv8’s architecture,
-                which I wanted to avoid.<br/><br/>
-              I therefore decided to try to adapt Grad-CAM to YOLOv8 myself. After some trial
-              and error, I believe this adaptation was successful.<br/><br/>
-              Once this was done, I started comparing Grad-CAM visualizations produced by the
-              pre-trained YOLOv8 model and by the fine-tuned version, using the same input images.
-              This comparison quickly revealed recurring patterns and differences in where the two
-              models seemed to focus their attention.<br/><br/>
-              At this point, my work has shifted toward a qualitative comparative analysis of
-              these visualizations, with the aim of better understanding how fine-tuning on artworks 
-              changes the way the model “looks” at images.<br/><br/>
-              If you are ever interested in my project, you can try contacting me via <a href="mailto:eloise.delerue@psl.eu">my email address</a>. (I cannot guarantee a response but I'll do my best.)
-            </p>
-          </div>
-        </div>
-      </div>
+              You can submit an image of your choice to the pre-trained and fine-tuned versions
+              of YOLOv8n and apply Grad-CAM to it in order to display the heatmap of the areas
+              on which the models have focused. Please note that only occurrences of 'persons'
+              will be studied in both cases.<br/>
+              <div class="triple-container">
+  <div class="side-text left">
+    lower values
+  </div>
+  
+  <div class="center-image">
+    <img src="{{url_for('static', filename='images/colormap.png')}}">
+  </div>
+  
+  <div class="side-text right">
+    higher values
+  </div>
+</div>
+              <input type="file" id="upload" accept="image/*" hidden />
+              <div class="sample-section">
+  <p class="sample-title">Try a sample:</p>
+  <div class="sample-container">
+    <img 
+      src="{{url_for('static', filename='images/sample1.jpg')}}" 
+      class="sample-thumb" 
+      data-name="sample1.jpg"
+    />
+    <img 
+      src="{{url_for('static', filename='images/sample2.jpg')}}" 
+      class="sample-thumb" 
+      data-name="sample2.jpg"
+    />
+    <img 
+      src="{{url_for('static', filename='images/sample3.jpg')}}" 
+      class="sample-thumb" 
+      data-name="sample3.jpg"
+    />
+  </div>
+</div>
+<input type="file" id="upload" accept="image/*" hidden />
+              <label for="upload" class="custom-file-upload">Or upload an image</label>
+              <div id="loading" class="loading-container" style="display: none;">
+                <img src="{{url_for('static', filename='images/time_flies.gif')}}" class="loading-gif"/>
+                <p>Image analysis in process...</p>
+              </div>
+              <div id="results-container" class="image-row" style="display: none;">
+                <div class="image-column">
+        <p>Original</p>
+        <img id="preview" />
     </div>
-
-          <div
-      class="window intro-window"
-      style="top: 50%; left: 50%; width: 600px; height: 180px; transform: translate(-50%, -50%)"
-    >
-      <div class="body">
-        <div class="topbar">
-          <p class="topbar">Welcome!</p>
-          <button class="close-button">
-            <img src="{{url_for('static', filename='images/close.png')}}" class="button-icon" />
-          </button>
-        </div>
-        <div class="inside">
-          
-          <div class="minimized-content">
-            <div class="typewriter">
-            <p style="text-align: center;">
-      Hi there! Feel free to navigate between the windows.
+        <div class="image-column">
+        <p>Pre-trained YOLOv8n</p>
+        <img id="result-yolov8n" />
+        <div class="metrics" id="metrics-yolov8n"></div>
+    </div>
+    <div class="image-column">
+        <p>Fine-tuned YOLOv8n</p>
+        <img id="result-jerome" />
+        <div class="metrics" id="metrics-jerome"></div>
+    </div>
+              </div>
             </p>
-            </div>
-            <button>Got it!</button>
           </div>
         </div>
       </div>
