@@ -43,17 +43,19 @@
           </div>
           <div class="maximized-content">
             <p style="text-align: justify;">
+              <b>WHY DID YOU DO THIS?</b><br/><br/>
               This self-directed student project was initially conceived as an opportunity
               to explore computer vision and to apply it to art history, a domain of strong
               personal interest. My initial goal was to fine-tune a computer vision model so
-              that it could specialise in recognising a specific iconographic motif in artworks.<br/><br/>
+              that it could specialise in recognising a specific iconographic motif in artworks.
+              <br/><br/><b>WHY YOLO?</b><br/><br/>
               I quickly chose YOLOv8n as my base model. The main reasons were its lightweight
               nature (I did not have access to a powerful machine for heavy computation), its speed
               without sacrificing too much performance, and the relative simplicity and abundant
               documentation of its architecture. (Like this video.)<br/><br/></p>
               <div class="video-wrapper" style="display: flex; justify-content: center; margin: 20px 0;">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HQXhDO7COj8?si=LuuaMdQjgSz_lOMC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div><p style="text-align: justify;"><br/><br/>
+</div><p style="text-align: justify;"><br/><br/><b>HOW DID IT GO?</b><br/><br/>
   After a few unsuccessful attempts, it became clear
               that once the model was up and running, the task was mostly about collecting and
               preparing data. This was not something I wanted to spend too much time on.<br/><br/>
@@ -79,10 +81,14 @@
               Once this was done, I started comparing Grad-CAM visualizations produced by the
               pre-trained YOLOv8 model and by the fine-tuned version, using the same input images.
               This comparison quickly revealed recurring patterns and differences in where the two
-              models seemed to focus their attention.<br/><br/>
+              models seemed to focus their attention.
+              <br/><br/><b>AND NOW?</b><br/><br/>
               At this point, my work has shifted toward a qualitative comparative analysis of
               these visualizations, with the aim of better understanding how fine-tuning on artworks 
-              changes the way the model “looks” at images.<br/><br/>
+              changes the way the model “looks” at images.
+              <br/><br/>
+              I also plan to renovate this website, transforming it into a giant interactive comic strip. With rabbits.
+              <br/><br/><b>HOW CAN I CONTACT YOU?</b><br/><br/>
               If you are ever interested in my project, you can try contacting me via <a href="mailto:eloise.delerue@psl.eu">my email address</a>. (I cannot guarantee a response but I'll do my best.)
             </p>
           </div>
@@ -136,11 +142,12 @@
           </div>
           <div class="maximized-content">
             <p style="text-align: justify;">
+              <b>WHAT IS FINE-TUNING?</b><br/><br/>
               Fine-tuning is a transfer learning technique in which a pre-trained model is further trained on a
               task-specific dataset. Rather than learning visual features from scratch, the model adapts previously
               learned representations to a new domain or task, typically requiring fewer training samples and less
               computational cost.
-              <br/><br/>
+              <br/><br/><b>WHAT DATASETS DID YOU USE?</b><br/><br/>
               My goal was to fine-tune YOLOv8, already trained on many classes, including persons, so that it would
               specialise in recognising people in artworks. To do this, I aggregated two publicly available object
               detection datasets focused on people depicted in artistic contexts:<br/><br/>
@@ -167,26 +174,52 @@
               <br/><br/>
               Together, these datasets comprise a total of 2,553 images annotated with bounding boxes for a single
               class (”person”). Training was conducted using YOLOv8n with the following hyperparameters:
-              <br/><br/>
+              <br/><br/><b>DID THIS TAKE TIME?</b><br/><br/>
               The full training process lasted approximately one hour with the Google Colab T4 GPU—an ideal duration
               for a minimal Persona 5 gaming session.
               <br/><br/>
               <img src="{{url_for('static', filename='images/l.png')}}" style="max-width: 15%; height: auto; display: block; margin: 10px auto;">
-              <br/><br/>
-              The following section reports the performance metrics obtained after training.
+              <br/><br/><b>WAS IT EFFICIENT?</b><br/><br/>
+              This section reports the performance metrics obtained after training.<br/><br/>
             </p>
-          <br/>
             <div style="display: flex; justify-content: space-between; gap: 10px;"> 
               <img src="{{url_for('static', filename='images/BoxPR_curve.png')}}" style="width: 48%;">
-              <img src="{{url_for('static', filename='images/BoxP_curve.png')}}" style="width: 48%;">
-            </div>
+              <img src="{{url_for('static', filename='images/BoxP_curve.png')}}" style="width: 48%;"></div>
+              <p><br/>The Precision-Recall curve summarizes the overall performance of the detector.
+              The area under this curve represents the mAP@0.5 (mean Average Precision),
+              which is 0.602 in this case. A "perfect" model would reach the top-right
+              corner (1.0, 1.0). The current shape shows that while the model is quite
+              accurate at low recall levels, its precision drops as it tries to find every
+              single person in the dataset.<br/><br/>
+              Precision measures how many of the model's "person" predictions
+              were actually correct. The curve shows a steady increase: as
+              the confidence threshold rises, the detections become more reliable.
+              The model reaches 1.00 precision at a 0.905 threshold, meaning that if
+              the model is 90.5% sure it sees a person, it is virtually always correct.<br/><br/>
+              </p>
             <div style="display: flex; justify-content: space-between; gap: 10px;"> 
               <img src="{{url_for('static', filename='images/BoxR_curve.png')}}" style="width: 48%;">
-              <img src="{{url_for('static', filename='images/BoxF1_curve.png')}}" style="width: 48%;">
-            </div>
+              <img src="{{url_for('static', filename='images/BoxF1_curve.png')}}" style="width: 48%;"></div>
+              <p><br/>The Recall-Confidence curve shows the model's ability to detect
+              all ground-truth instances (Recall) as the confidence threshold changes.
+              It starts at a high of 0.86, meaning that at a very low confidence threshold,
+              the model finds 86% of all people. However, as you demand higher confidence
+              for a detection, the recall drops significantly, showing the model struggles
+              to be highly confident about all its correct detections.<br/><br/>
+              The F1 curve represents the balance between Precision and Recall.
+              The peak of the curve indicates the "sweet spot" for the model's performance;
+              here, the maximum F1-score is 0.59, achieved at a confidence threshold of 0.304.
+              This suggests that setting the model to accept detections with ~30% confidence
+              provides the best trade-off between finding all people and avoiding false alarms.<br/><br/></p>
             <img src="{{url_for('static', filename='images/confusion_matrix_normalized.png')}}" style="width: 75%; display: block; margin: 0 auto;">
-            <p><br/><br/>
-              You can find the fine-tuning Colab Notebook <a href="https://colab.research.google.com/drive/1S_N5_DHhC0aD7bKzZP5--l8Vui9AosFJ?usp=sharing" target="_blank">here</a>.</p>
+            <p>This matrix illustrates the classification accuracy of the model.
+            It shows that 57% of actual "person" instances are correctly identified,
+            while 43% are missed and classified as "background" (False Negatives).
+            Interestingly, the model shows perfect precision for the background,
+            meaning it didn't mistakenly label any background noise as a person in
+            this specific view.
+            <br/><br/><b>CAN I SEE THE DETAILS?</b><br/><br/>
+              Of course! You can find the fine-tuning Colab Notebook <a href="https://colab.research.google.com/drive/1S_N5_DHhC0aD7bKzZP5--l8Vui9AosFJ?usp=sharing" target="_blank">here</a>.</p>
           </div>
         </div>
       </div>
@@ -215,11 +248,13 @@
           </div>
           <div class="maximized-content">
             <p style="text-align: justify;">
+              <b>WHAT IS GRAD-CAM?</b><br/><br/>
               Gradient-weighted Class Activation Mapping (Grad-CAM) is a post-hoc interpretability
               technique designed to explain the predictions of convolutional neural networks, by
               highlighting the regions of an input image that contribute most strongly to the model’s
               prediction for a given class.<br/><br/>
-              <img src="{{url_for('static', filename='images/greg.png')}}" style="max-width: 40%; height: auto; display: block; margin: 10px auto;"><br/><br/>
+              <img src="{{url_for('static', filename='images/greg.png')}}" style="max-width: 40%; height: auto; display: block; margin: 10px auto;">
+              <br/><br/><b>HOW DID YOU IMPLEMENT IT?</b><br/><br/>
               YOLOv8 differs from standard classification CNNs in both output structure and feature
               aggregation, as it produces dense predictions across multiple spatial locations and
               scales rather than a single class score. Consequently, applying Grad-CAM to YOLOv8
@@ -238,8 +273,8 @@
                 library and its official documentation</a>, particularly the guidance on non-classification
                 architectures.<br/><br/></li></ul>
               <p>These resources were combined and extended to support YOLOv8’s architecture and prediction
-                pipeline.<br/><br/>
-              Now, how does it work exactly?<br/><br/>
+                pipeline.
+              <br/><br/><b>HOW DOES IT WORK EXACTLY?</b><br/><br/>
               After standard image preprocessing, the YOLOv8 inference pipeline was modified by customising
               the Non-Maximum Suppression (NMS) stage in order to preserve gradient flow for interpretability
               purposes. Forward passes were then performed to compute detection predictions. A custom
@@ -252,12 +287,16 @@
               represents a semantic bottleneck in the network: information is maximally compressed while retaining
               high-level semantic meaning, immediately before the network branches into detection heads for
               bounding box regression and classification. As a result, the abstract concept of “person” is most
-              strongly encoded at this stage, making it an ideal location for interpretability analysis.<br/><br/>
+              strongly encoded at this stage, making it an ideal location for interpretability analysis.<br/><br/></p>
+              <img src="https://www.mdpi.com/water/water-14-02412/article_deploy/html/images/water-14-02412-g001.png" style="max-width: 80%; height: auto; display: block; margin: 10px auto;">
+              <p style="text-align: center;">© palaestinaonline.de</p>
+              <p><br/>
               Using the gradients of the person class score with respect to the SPPF feature maps, Grad-CAM
               computes a weighted combination of these activations. The resulting localization map is upsampled
               and overlaid onto the original image as a heatmap, where higher intensities correspond to regions
-              that contributed most strongly to the model’s detection decision.<br/><br/>
-              You can find the Grad-CAM Colab Notebook <a href="https://colab.research.google.com/drive/1dxNIU3xfNz825WDwsRalJ2BblCwOyNqx#scrollTo=xwlDLHUzzLxe" target="_blank">here</a>.</p>
+              that contributed most strongly to the model’s detection decision.
+              <br/><br/><b>CAN I SEE THE DETAILS?</b><br/><br/>
+              Of course! You can find the Grad-CAM Colab Notebook <a href="https://colab.research.google.com/drive/1dxNIU3xfNz825WDwsRalJ2BblCwOyNqx#scrollTo=xwlDLHUzzLxe" target="_blank">here</a>.</p>
               </p>
           </div>
         </div>
@@ -317,6 +356,7 @@
           </div>
           <div class="maximized-content">
             <p style="text-align: justify;">
+              <b>WHAT DO I DO?</b><br/><br/>
               You can submit an image of your choice to the pre-trained and fine-tuned versions
               of YOLOv8n and apply Grad-CAM to it in order to display the heatmap of the areas
               on which the models have focused. Please note that only occurrences of 'persons'
