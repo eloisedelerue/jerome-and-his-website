@@ -44,7 +44,7 @@ The effectiveness of any Deep Learning model is directly tied to the quality and
 - Format Standardization: Ensuring all augmented images and their corresponding labels (bounding boxes) remain perfectly synchronized and formatted for the YOLOv8 training pipeline.
 
 ## Website
-This directory contains the web application for the project.
+This directory contains the web application for the project. You can also access it following [this link](https://jerome-and-his-website.onrender.com/).
 The application is built with Flask and features an interactive desktop-style interface to explore how deep learning models "see" art.
 
 ### Technical Implementation
