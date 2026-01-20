@@ -80,7 +80,9 @@ body {
 
   margin: 0;
 
-  animation: typing 3.5s steps(42, end), blink-caret 0.75s step-end infinite;
+  animation:
+    typing 3.5s steps(42, end),
+    blink-caret 0.75s step-end infinite;
 }
 
 @keyframes typing {
@@ -484,4 +486,34 @@ footer div:after {
   max-width: 400px;
   height: auto;
   display: block;
+}
+
+.sample-section {
+  width: 100%;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sample-title {
+  font-size: 22px !important; /* Force la taille pour matcher le reste */
+  text-align: center !important;
+  margin-bottom: 5px;
+  padding: 0 !important;
+}
+
+.sample-container {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.sample-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  background-color: white;
 }
