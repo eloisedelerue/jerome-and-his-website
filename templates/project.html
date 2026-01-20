@@ -62,7 +62,28 @@
   </div>
 </div>
               <input type="file" id="upload" accept="image/*" hidden />
-              <label for="upload" class="custom-file-upload">Upload an image</label>
+              <div class="sample-section">
+  <p class="sample-title">Try a sample:</p>
+  <div class="sample-container">
+    <img 
+      src="{{url_for('static', filename='images/sample1.jpg')}}" 
+      class="sample-thumb" 
+      data-name="sample1.jpg"
+    />
+    <img 
+      src="{{url_for('static', filename='images/sample2.jpg')}}" 
+      class="sample-thumb" 
+      data-name="sample2.jpg"
+    />
+    <img 
+      src="{{url_for('static', filename='images/sample3.jpg')}}" 
+      class="sample-thumb" 
+      data-name="sample3.jpg"
+    />
+  </div>
+</div>
+<input type="file" id="upload" accept="image/*" hidden />
+              <label for="upload" class="custom-file-upload">Or upload an image</label>
               <div id="loading" class="loading-container" style="display: none;">
                 <img src="{{url_for('static', filename='images/time_flies.gif')}}" class="loading-gif"/>
                 <p>Image analysis in process...</p>
@@ -145,6 +166,8 @@
               The full training process lasted approximately one hour with the Google Colab T4 GPU—an ideal duration
               for a minimal Persona 5 gaming session.
               <br/><br/>
+              <img src="{{url_for('static', filename='images/l.png')}}" style="max-width: 15%; height: auto; display: block; margin: 10px auto;">
+              <br/><br/>
               The following section reports the performance metrics obtained after training.
             </p>
           <br/>
@@ -158,7 +181,7 @@
             </div>
             <img src="{{url_for('static', filename='images/confusion_matrix_normalized.png')}}" style="width: 75%; display: block; margin: 0 auto;">
             <p><br/><br/>
-              Please note that the codes will be made available soon.</p>
+              You can find the fine-tuning Colab Notebook <a href="https://colab.research.google.com/drive/1S_N5_DHhC0aD7bKzZP5--l8Vui9AosFJ?usp=sharing" target="_blank">here</a>.</p>
           </div>
         </div>
       </div>
@@ -191,6 +214,7 @@
               technique designed to explain the predictions of convolutional neural networks, by
               highlighting the regions of an input image that contribute most strongly to the model’s
               prediction for a given class.<br/><br/>
+              <img src="{{url_for('static', filename='images/greg.png')}}" style="max-width: 40%; height: auto; display: block; margin: 10px auto;"><br/><br/>
               YOLOv8 differs from standard classification CNNs in both output structure and feature
               aggregation, as it produces dense predictions across multiple spatial locations and
               scales rather than a single class score. Consequently, applying Grad-CAM to YOLOv8
@@ -228,7 +252,7 @@
               computes a weighted combination of these activations. The resulting localization map is upsampled
               and overlaid onto the original image as a heatmap, where higher intensities correspond to regions
               that contributed most strongly to the model’s detection decision.<br/><br/>
-              Please note that the codes will be made available soon.
+              You can find the Grad-CAM Colab Notebook <a href="https://colab.research.google.com/drive/1dxNIU3xfNz825WDwsRalJ2BblCwOyNqx#scrollTo=xwlDLHUzzLxe" target="_blank">here</a>.</p>
               </p>
           </div>
         </div>
@@ -258,8 +282,8 @@
           </div>
           <div class="maximized-content">
             <p style="text-align: justify;">
-              Coming soon...<br/>
-          <img src="{{url_for('static', filename='images/l.png')}}" style="max-width: 10%; height: auto; display: block; margin: 10px auto;">
+              Coming soon...<br/><br/><br/><br/><br/><br/>
+          <img src="{{url_for('static', filename='images/time_flies.gif')}}" style="max-width: 15%; height: auto; display: block; margin: 10px auto;">
             </p>
           </div>
         </div>
@@ -294,7 +318,11 @@
               I quickly chose YOLOv8n as my base model. The main reasons were its lightweight
               nature (I did not have access to a powerful machine for heavy computation), its speed
               without sacrificing too much performance, and the relative simplicity and abundant
-              documentation of its architecture. After a few unsuccessful attempts, it became clear
+              documentation of its architecture. (Like this video.)<br/><br/></p>
+              <div class="video-wrapper" style="display: flex; justify-content: center; margin: 20px 0;">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HQXhDO7COj8?si=LuuaMdQjgSz_lOMC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div><p style="text-align: justify;"><br/><br/>
+  After a few unsuccessful attempts, it became clear
               that once the model was up and running, the task was mostly about collecting and
               preparing data. This was not something I wanted to spend too much time on.<br/><br/>
               Fortunately, I found open-source, already annotated datasets focused on human figures
@@ -305,6 +333,7 @@
               and the sense that I had not actually accomplished that much. More importantly, I felt
               that I did not really understand what was happening inside the model. I was able to train
               it, but not to explain it.<br/><br/>
+              <img src="{{url_for('static', filename='images/not_much.png')}}" style="max-width: 12%; height: auto; display: block; margin: 10px auto;"><br/><br/>
               This is when I started looking into model interpretability, and in particular into
               Grad-CAM, which allows the visualisation of heatmaps showing which parts of an image
               the model focuses on when making predictions. The idea immediately appealed to me.
@@ -322,6 +351,7 @@
               At this point, my work has shifted toward a qualitative comparative analysis of
               these visualizations, with the aim of better understanding how fine-tuning on artworks 
               changes the way the model “looks” at images.<br/><br/>
+              If you are ever interested in my project, you can try contacting me via <a href="mailto:eloise.delerue@psl.eu">my email address</a>. (I cannot guarantee a response but I'll do my best.)
             </p>
           </div>
         </div>
